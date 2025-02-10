@@ -1,0 +1,29 @@
+import requests
+import pandas as pd
+
+def get_crypto_market_data():
+    url = "https://api.coingecko.com/api/v3/coins/markets"
+    params = {
+        "vs_currency": "usd",
+        "order": "market_cap_desc",
+        "per_page": 10,
+        "page": 1,
+        "sparkline": False
+    }
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("Error fetching data")
+        return []
+
+def display_market_data():
+    data = get_crypto_market_data()
+    if data:
+        df = pd.DataFrame(data, columns=["name", "symbol", "market_cap", "current_price", "total_volume"])
+        print(df)
+    else:
+        print("No data available")
+
+if __name__ == "__main__":
+    display_market_data()
